@@ -1,0 +1,12 @@
+<h1>Welcome to the Wizard Page of Wizards....wuzards</h1>
+
+
+<p>This is where the wizards are. YOu are in the right place I guess...</p>
+
+<ol>
+<% @wizards.each do |wizard| %>
+  <li>
+    <%= "#{wizard[:name]}" %>
+  </li>
+<% end %>
+</ol>
