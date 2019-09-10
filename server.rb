@@ -1,39 +1,56 @@
 require "sinatra"
 require "pry" if development? || test?
 require "sinatra/reloader" if development?
+require "csv"
 # require_relative "./models/wizard"
 
 set :bind, '0.0.0.0'  # bind to all interfaces
-
-# get '/' do
-#   redirect "/wizards"
-# end
-
-WIZARDS = [
-  {name: "Harry Potter", age: 18, power_type: "YOUTHS"},
-  {name: "Gandalf", age: 10000, power_type: "grey" },
-  {name: "Usidor", age: 275, power_type: "Cranky Podcast power"},
-  {name: "Zatanna", age: 21, power_type: "Illusion"},
-  {name: "Hermione", age: 18, power_type: "THE POWER TO DO ALL OF THE WORK"}
-]
 
 get '/' do
   redirect "/wizards"
 end
 
 get "/wizards" do
-  @wizards = WIZARDS
+  # @wizards = CSV.readlines("wizards.csv", headers: true)
+  @wizards = []
+
+  CSV.foreach("wizards.csv", headers: true) do |row|
+    @wizards << row.to_hash
+  end
 
   erb :index
 end
 
-get "/wizards/:wizard_name" do
-  @wizard_name = params[:wizard_name]
 
-  erb :show
+get "/wizards/new" do
+  erb :new
 end
 
-get "/foobar" do
 
-  erb :foobar
+
+
+post "/wizards" do
+  # binding.pry
+
+  name = params["name"]
+  age = params["age"]
+  power_type = params["power_type"]
+
+  # if name.strip.empty?
+  if name == ""
+    erb :new
+  else
+    CSV.open("wizards.csv", "a") do |csv_file|
+      csv_file << [name, age, power_type]
+    end
+
+    redirect "/wizards"
+  end
+
 end
+
+# get "/wizards/:wizard_name" do
+#   @wizard_name = params[:wizard_name]
+#
+#   erb :show
+# end

@@ -6,7 +6,9 @@
 <ol>
 <% @wizards.each do |wizard| %>
   <li>
-    <%= "#{wizard[:name]}" %>
+    <%= "#{wizard["name"]}" %>
   </li>
 <% end %>
 </ol>
+
+<a href="/wizards/new">Add a new dope wizard</a>
